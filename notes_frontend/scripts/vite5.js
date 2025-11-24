@@ -2,9 +2,8 @@
 /**
  * PUBLIC_INTERFACE
  * Vite 5 launcher wrapper.
- * This wrapper ensures we execute vite@5.x regardless of any workspace-level resolution to vite@7.
- * It requires the local alias package "vite5" (npm alias to vite@5.4.11) if installed,
- * otherwise falls back to the local project's vite if it is 5.x.
+ * Ensures the project runs with vite@5.x by invoking a local alias dependency "vite5": "npm:vite@5.4.11".
+ * If the alias is not installed, it will try the local 'vite' package only if it is 5.x.
  *
  * Usage:
  *   node scripts/vite5.js [command] [args...]
@@ -14,12 +13,16 @@
  *   node scripts/vite5.js preview --host 0.0.0.0 --port 3000
  */
 (async () => {
-  function run(binPath, argv) {
-    // Use Node to execute the vite binary file.
+  function run(binPath) {
+    // Delegate to vite's CLI entry (CommonJS)
+    if (typeof require !== "function") {
+      console.error("ERROR: CommonJS require is not available in this runtime. Ensure Node is used to run this script.");
+      process.exit(1);
+    }
     require(binPath);
   }
 
-  // Try vite5 alias first
+  // 1) Try vite5 alias (preferred and enforced)
   try {
     const vite5PkgJson = require('vite5/package.json');
     if (!/^5\./.test(vite5PkgJson.version)) {
@@ -27,24 +30,27 @@
       process.exit(1);
     }
     const bin = require.resolve('vite5/bin/vite.js');
-    run(bin, process.argv.slice(2));
+    run(bin);
     return;
   } catch (e) {
-    // no-op, will try local vite
+    // alias not available, continue to fallback
   }
 
-  // Fallback: local vite if version is 5.x
+  // 2) Fallback to local vite only if it is 5.x
   try {
     const vitePkgJson = require('vite/package.json');
     if (!/^5\./.test(vitePkgJson.version)) {
-      console.error(`ERROR: Local vite resolved to version ${vitePkgJson.version}, but Node 18 requires vite 5.x`);
-      console.error('Fix by removing node_modules and reinstalling from npm-shrinkwrap.json.');
+      console.warn(`Warning: Local vite resolved to ${vitePkgJson.version}.`);
+      console.warn('This project requires vite 5.x under Node 18. Please ensure dependency alias is set:');
+      console.warn('  "vite5": "npm:vite@5.4.11"');
+      console.warn('Then reinstall dependencies and try again.');
       process.exit(1);
     }
     const bin = require.resolve('vite/bin/vite.js');
-    run(bin, process.argv.slice(2));
+    run(bin);
+    return;
   } catch (e) {
-    console.error('ERROR: Unable to resolve vite. Ensure dependencies are installed.');
+    console.error('ERROR: Unable to resolve vite5 alias or local vite. Ensure dependencies are installed.');
     console.error(e?.message || e);
     process.exit(1);
   }

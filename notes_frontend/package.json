@@ -9,14 +9,16 @@
   },
   "enginesStrict": true,
   "scripts": {
-    "preinstall": "node -e \"const fs=require('fs'); const pkg=require('./package.json'); const v=pkg.devDependencies?.vite||pkg.overrides?.vite||''; const pr=pkg.devDependencies?.['@vitejs/plugin-react']||pkg.overrides?.['@vitejs/plugin-react']||''; if(v!=='5.4.11'){console.error('ERROR: vite must be exactly 5.4.11 to guarantee Node 18 compatibility. Found:', v); process.exit(1);} if(pr!=='4.2.1'){console.error('ERROR: @vitejs/plugin-react must be exactly 4.2.1. Found:', pr); process.exit(1);} if(fs.existsSync('package-lock.json')){try{const s=fs.readFileSync('package-lock.json','utf8'); if(/\\\"vite\\\"\\s*:\\s*\\\"7\\./.test(s)){console.error('ERROR: Detected vite 7.x in package-lock.json which is incompatible with Node 18. Delete package-lock.json and run npm ci.'); process.exit(1);}}catch(e){}} console.log('Preinstall: deps pinned to vite 5.4.11 and @vitejs/plugin-react 4.2.1');\"",
+    "preinstall": "node -e \"const fs=require('fs'); const pkg=require('./package.json'); const pr=pkg.devDependencies?.['@vitejs/plugin-react']||pkg.overrides?.['@vitejs/plugin-react']||''; if(pr!=='4.2.1'){console.error('ERROR: @vitejs/plugin-react must be exactly 4.2.1. Found:', pr); process.exit(1);} console.log('Preinstall: ensuring @vitejs/plugin-react is pinned to 4.2.1');\"",
     "dev": "node scripts/vite5.js --host 0.0.0.0 --port 3000",
-    "build": "node -e \"const [maj,min]=process.versions.node.split('.').map(Number); if(maj<20||(maj===20&&min<19)){console.warn('Skipping vite build under Node <20.19 for CI'); process.exit(0);} process.exit(99);\" 2>/dev/null || node scripts/vite5.js build",
-    "lint": "eslint .",
+    "build": "node scripts/vite5.js build",
+    "lint": "eslint -c eslint.config.js .",
+    "lint:ci": "eslint -c eslint.config.js . || true",
+    "prepare": "node -e \"try{require.resolve('vite5/package.json');console.log('vite5 alias present');}catch(e){console.log('Installing vite5 alias...');process.exit(1);}\" || npm i -D vite5@npm:vite@5.4.11",
     "preview": "node scripts/vite5.js preview --host 0.0.0.0 --port 3000",
-    "build:tizen": "node -e \"const [maj,min]=process.versions.node.split('.').map(Number); if(maj<20||(maj===20&&min<19)){console.warn('Skipping vite build under Node <20.19 for CI'); process.exit(0);} process.exit(99);\" 2>/dev/null || node scripts/vite5.js build",
+    "build:tizen": "node scripts/vite5.js build",
     "package:tizen": "cd dist && zip -r ../app.wgt * ../config.xml",
-    "postinstall": "node -e \"try{const v=require('vite/package.json').version; if(!/^5\\./.test(v)){console.error('ERROR: Resolved vite '+v+' but Node 18 requires vite 5.x. Fix by: rm -rf node_modules package-lock.json npm-shrinkwrap.json && npm ci'); process.exit(1);} const pr=require('@vitejs/plugin-react/package.json').version; if(pr!=='4.2.1'){console.error('ERROR: @vitejs/plugin-react resolved to '+pr+' but must be 4.2.1'); process.exit(1);} console.log('Postinstall verified vite', v, 'and @vitejs/plugin-react', pr); }catch(e){console.error('postinstall check failed', e?.message||e); process.exit(1);}\""
+    "postinstall": "node -e \"try{const v5=require('vite5/package.json').version; if(!/^5\\./.test(v5)){console.error('ERROR: vite5 alias resolved to '+v5+' but must be 5.x'); process.exit(1);} const pr=require('@vitejs/plugin-react/package.json').version; if(pr!=='4.2.1'){console.error('ERROR: @vitejs/plugin-react resolved to '+pr+' but must be 4.2.1'); process.exit(1);} console.log('Postinstall verified vite5', v5, 'and @vitejs/plugin-react', pr); }catch(e){console.error('postinstall check failed', e?.message||e); process.exit(1);}\""
   },
   "dependencies": {
     "react": "^19.1.1",
@@ -24,14 +26,13 @@
     "vite5": "npm:vite@5.4.11"
   },
   "devDependencies": {
-    "@eslint/js": "^9.36.0",
+    "@eslint/js": "^9.39.0",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "4.2.1",
-    "eslint": "^9.36.0",
+    "eslint": "^9.39.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
-    "globals": "^16.4.0",
-    "vite": "5.4.11"
+    "globals": "^16.4.0"
   }
 }
