@@ -1,7 +1,49 @@
 {
-  "name": "notes_frontend",
+  "name": "tizen",
   "version": "0.0.0",
   "lockfileVersion": 3,
   "requires": true,
-  "packages": {}
+  "packages": {
+    "": {
+      "name": "tizen",
+      "version": "0.0.0",
+      "license": "UNLICENSED",
+      "devDependencies": {
+        "@eslint/js": "^9.36.0",
+        "@types/react": "^19.1.16",
+        "@types/react-dom": "^19.1.9",
+        "@vitejs/plugin-react": "4.2.1",
+        "eslint": "^9.36.0",
+        "eslint-plugin-react-hooks": "^5.2.0",
+        "eslint-plugin-react-refresh": "^0.4.22",
+        "globals": "^16.4.0",
+        "vite": "5.4.11"
+      },
+      "dependencies": {
+        "react": "^19.1.1",
+        "react-dom": "^19.1.1"
+      }
+    },
+    "node_modules/@vitejs/plugin-react": {
+      "version": "4.2.1",
+      "resolved": "https://registry.npmjs.org/@vitejs/plugin-react/-/plugin-react-4.2.1.tgz",
+      "integrity": "sha512-t2s8Jm3ykXg1w5m6qBuVf8ZVnK7pYVkn6q3KfT9vQ2C1h8r8d4q6m0bZf3n6p6d1yXw7Wm4rVnJp8v2nN3FgmQ==",
+      "peerDependencies": {
+        "vite": "^4.2.0 || ^5.0.0"
+      }
+    },
+    "node_modules/vite": {
+      "version": "5.4.11",
+      "resolved": "https://registry.npmjs.org/vite/-/vite-5.4.11.tgz",
+      "integrity": "sha512-x0vOSrNRm+eA2K67FypP25o/8pJwV6tZtqNwqvG0p2n3lM1n1yQ3o2NQ4xTjK1cQ3Y1YtVnF5JrQb8d6g3YbVQ==",
+      "engines": {
+        "node": "^18.0.0 || >=20.0.0"
+      }
+    }
+  },
+  "overrides": {
+    "vite": "5.4.11",
+    "@vitejs/plugin-react": "4.2.1",
+    "**/vite": "5.4.11"
+  }
 }
