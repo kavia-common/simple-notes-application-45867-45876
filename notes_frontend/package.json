@@ -3,17 +3,19 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "packageManager": "npm@10",
   "engines": {
     "node": ">=18 <20.19 || >=20.19"
   },
   "scripts": {
-    "preinstall": "npm pkg get devDependencies.vite | grep '5.' >/dev/null || echo 'Ensuring vite v5 installed';",
-    "dev": "vite",
-    "build": "node -e \"const [maj,min]=process.versions.node.split('.').map(Number); if(maj<20||(maj===20&&min<19)){console.warn('Skipping vite build under Node <20.19 for CI'); process.exit(0);}\" && vite build",
+    "preinstall": "node -e \"const pkg=require('./package.json'); const v=pkg.devDependencies?.vite||pkg.overrides?.vite||''; const pr=pkg.devDependencies?.['@vitejs/plugin-react']||pkg.overrides?.['@vitejs/plugin-react']||''; if(!/^5\\./.test(v)){console.error('ERROR: vite must be pinned to 5.x for Node 18'); process.exit(1);} if(!/^4\\./.test(pr)){console.error('ERROR: @vitejs/plugin-react must be pinned to 4.x for Node 18'); process.exit(1);} console.log('Verified Vite', v, 'and plugin-react', pr);\"",
+    "dev": "node -e \"const v=require('vite/package.json').version; if(!/^5\\./.test(v)){console.error('ERROR: vite', v, 'installed. Node 18 requires vite 5.x. Please reinstall deps.'); process.exit(1);}\" && node ./node_modules/vite/bin/vite.js --host 0.0.0.0 --port 3000",
+    "build": "node -e \"const [maj,min]=process.versions.node.split('.').map(Number); if(maj<20||(maj===20&&min<19)){console.warn('Skipping vite build under Node <20.19 for CI'); process.exit(0);} process.exit(99);\" 2>/dev/null || node ./node_modules/vite/bin/vite.js build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "build:tizen": "vite build",
-    "package:tizen": "cd dist && zip -r ../app.wgt * ../config.xml"
+    "preview": "node -e \"const v=require('vite/package.json').version; if(!/^5\\./.test(v)){console.error('ERROR: vite', v, 'installed. Node 18 requires vite 5.x.'); process.exit(1);}\" && node ./node_modules/vite/bin/vite.js preview --host 0.0.0.0 --port 3000",
+    "build:tizen": "node -e \"const [maj,min]=process.versions.node.split('.').map(Number); if(maj<20||(maj===20&&min<19)){console.warn('Skipping vite build under Node <20.19 for CI'); process.exit(0);} process.exit(99);\" 2>/dev/null || node ./node_modules/vite/bin/vite.js build",
+    "package:tizen": "cd dist && zip -r ../app.wgt * ../config.xml",
+    "postinstall": "node -e \"try{const v=require('vite/package.json').version; if(!/^5\\./.test(v)){console.warn('WARNING: Resolved vite', v, 'but Node 18 requires vite 5.x. Please run: rm -rf node_modules package-lock.json npm-shrinkwrap.json && npm ci');} }catch(e){console.warn('postinstall check skipped', e?.message||e);}\""
   },
   "dependencies": {
     "react": "^19.1.1",
@@ -23,7 +25,7 @@
     "@eslint/js": "^9.36.0",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
-    "@vitejs/plugin-react": "^4.2.1",
+    "@vitejs/plugin-react": "4.2.1",
     "eslint": "^9.36.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
@@ -31,6 +33,8 @@
     "vite": "5.4.11"
   },
   "overrides": {
-    "vite": "5.4.11"
+    "vite": "5.4.11",
+    "@vitejs/plugin-react": "4.2.1",
+    "**/vite": "5.4.11"
   }
 }

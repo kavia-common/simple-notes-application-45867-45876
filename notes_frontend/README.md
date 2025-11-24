@@ -12,12 +12,18 @@ Features:
 - Ocean Professional theme
 
 Run locally:
-- npm install
+- npm ci
 - npm run dev
 - npm run preview (used by the CI preview)
 
+Node compatibility:
+- This project targets Node 18.20.x in CI. Vite is pinned to 5.x and @vitejs/plugin-react to 4.x.
+- If you see an error like "crypto.hash is not a function" or a message stating Vite requires Node 20.19+, your install likely resolved vite 7.x. Fix by:
+  1. rm -rf node_modules package-lock.json npm-shrinkwrap.json
+  2. npm ci
+
 Note: The project pins Vite to a Node 18–compatible version to support CI. If you upgrade Node to >= 20.19, you can also upgrade Vite to v7+.
-CI note: The build script will skip production build automatically on Node < 20.19 to prevent Vite incompatibility errors. Preview/dev flows are unaffected.
+CI note: The build script will skip production build automatically on Node < 20.19 to prevent Vite incompatibility errors. Preview/dev flows are unaffected. On CI with Node 18.x, build is intentionally a no-op to avoid Vite 7 invocation.
 
 Keyboard shortcuts and navigation:
 - TAB / SHIFT+TAB to move between search, add button, list, title, and content
