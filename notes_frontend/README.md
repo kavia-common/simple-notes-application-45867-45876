@@ -13,8 +13,8 @@ Features:
 
 Run locally:
 - npm ci
-- npm run dev
-- npm run preview (used by the CI preview)
+- npm run dev (uses a local vite@5 wrapper to ensure Node 18 compatibility)
+- npm run preview (uses the same vite@5 wrapper; used by the CI preview)
 
 Lockfiles and Node 18:
 - This repo uses npm-shrinkwrap.json as the authoritative lockfile to pin Vite 5.x and @vitejs/plugin-react 4.x for Node 18.
