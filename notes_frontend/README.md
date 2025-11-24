@@ -1,16 +1,41 @@
-# React + Vite
+# Ocean Notes (Tizen Web)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A single‑page notes application for Tizen web runtime with local persistence.
 
-Currently, two official plugins are available:
+Features:
+- Create, view, edit, and delete notes
+- Autosave title and content
+- Search by title (real‑time)
+- Sorted by last edited (most recent first)
+- LocalStorage persistence: { id, title, content, createdAt, updatedAt }
+- Accessible keyboard navigation and high‑contrast focus states
+- Ocean Professional theme
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Run locally:
+- npm install
+- npm run dev
+- npm run preview (used by the CI preview)
 
-## React Compiler
+Note: The project pins Vite to a Node 18–compatible version to support CI. If you upgrade Node to >= 20.19, you can also upgrade Vite to v7+.
+CI note: The build script will skip production build automatically on Node < 20.19 to prevent Vite incompatibility errors. Preview/dev flows are unaffected.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Keyboard shortcuts and navigation:
+- TAB / SHIFT+TAB to move between search, add button, list, title, and content
+- ENTER on a list item to open it
+- Delete buttons are accessible via TAB on each note row or via the editor action
+- Remote keys supported:
+  - UP/DOWN move focus between primary areas (search ⇄ add button ⇄ list ⇄ editor)
+  - BACK logs a message (no navigation stack)
+  - ENTER triggers default action on focused element
 
-## Expanding the ESLint configuration
+Files:
+- src/App.jsx: Main UI implementation
+- src/index.css: Ocean Professional theme and layout styles
+- src/storage.js: localStorage helpers
+- src/utils.js: debounce, relative time formatting, title normalization
+- config.xml: Minimal Tizen widget configuration
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Dev notes:
+- The layout is fixed to 1920×1080 for Tizen TV preview
+- Avoids unsupported APIs; uses vanilla React and browser APIs only
+- Minimal inline comments are included in the code for maintainability

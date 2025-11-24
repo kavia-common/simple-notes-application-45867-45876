@@ -4,6 +4,6 @@
   <feature name="http://tizen.org/feature/screen.size.all"/>
   <icon src="icon.png"/>
   <content src="index.html"/>
-  <name>myTizenApp</name>
+  <name>Ocean Notes</name>
   <tizen:profile name="tizen"/>
 </widget>
