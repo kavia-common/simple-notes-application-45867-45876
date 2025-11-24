@@ -16,6 +16,10 @@ Run locally:
 - npm run dev
 - npm run preview (used by the CI preview)
 
+Lockfiles and Node 18:
+- This repo uses npm-shrinkwrap.json as the authoritative lockfile to pin Vite 5.x and @vitejs/plugin-react 4.x for Node 18.
+- Do not create or commit package-lock.json. If package-lock.json exists and you see Vite resolving to 7.x, delete package-lock.json and run `npm ci` again.
+
 Node compatibility:
 - This project targets Node 18.20.x in CI. Vite is pinned to 5.x and @vitejs/plugin-react to 4.x.
 - If you see an error like "crypto.hash is not a function" or a message stating Vite requires Node 20.19+, your install likely resolved vite 7.x. Fix by:
