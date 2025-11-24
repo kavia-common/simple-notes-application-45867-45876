@@ -1,10 +1,12 @@
 /// PUBLIC_INTERFACE
-/** Minimal ESLint flat config for CI that does not import external packages. */
+/** ESLint flat config for CI with safe defaults and comprehensive ignore patterns.
+ * Keeps configuration self-contained to avoid importing external packages in CI.
+ */
 export default [
   {
     name: "ci-base",
     languageOptions: {
-      ecmaVersion: 2022,
+      ecmaVersion: 2023,
       sourceType: "module",
       globals: {
         window: "readonly",
@@ -15,7 +17,10 @@ export default [
         process: "readonly",
       },
     },
-    rules: {},
+    rules: {
+      // keep simple; project code doesn't enforce special rules in CI
+      "no-console": "off",
+    },
   },
   {
     name: "ci-ignores",
@@ -23,9 +28,11 @@ export default [
       "dist/**",
       "coverage/**",
       "node_modules/**",
+      "node_modules.bak_*/**",
+      "public/**",
       "scripts/**",
       "*.config.js",
       "vite.config.js",
     ],
   },
-]; 
+];
